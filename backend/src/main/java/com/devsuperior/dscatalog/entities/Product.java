@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.dto;
+package com.devsuperior.dscatalog.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -14,8 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
-import com.devsuperior.dscatalog.entities.Category;
 
 @Entity
 @Table(name = "tb_product")
@@ -130,6 +128,5 @@ public class Product implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
+
 }
