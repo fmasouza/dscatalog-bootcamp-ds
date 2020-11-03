@@ -1,5 +1,5 @@
-import { makeRequest } from 'core/utils/request';
 import React, { useState } from 'react';
+import { makePrivateRequest } from 'core/utils/request';
 import BaseForm from '../../BaseForm';
 import './styles.scss';
 
@@ -35,7 +35,7 @@ const Form = () => {
             imgUrl: 'https://www.havan.com.br/media/catalog/product/cache/55f334c6f9412d6b39cfe195ce4e3943/v/i/video-game-microsoft-xbox-one-s-1tb-com-2-controles_241357_1.jpg',
             categories: [{ id: formData.category}]
         }
-       makeRequest({ url: '/products', method: 'POST', data: payLoad})
+       makePrivateRequest({ url: '/products', method: 'POST', data: payLoad})
         .then(() => {
             setFormData({ name: '', category: '', price: '', description: ''})
         });
