@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ProductsResponse } from 'core/types/Product';
 import { useHistory } from 'react-router-dom';
 import Card from '../Card';
-import { makeRequest } from 'core/utils/request';
+import { makePrivateRequest, makeRequest } from 'core/utils/request';
 import Pagination from 'core/components/Pagination';
+import { toast } from 'react-toastify';
 
 const List = () => {
 
@@ -12,7 +13,7 @@ const List = () => {
     const [activePage, setActivePage] = useState(0);
     const history = useHistory();
 
-    useEffect(() => {
+    const getProducts = useCallback(() => {
         const params = {
             page: activePage,
             linesPerPage: 4,
@@ -24,11 +25,30 @@ const List = () => {
             .then(response => setProductsResponse(response.data))
             .finally(() => {
                 setIsLoading(false);
-            });
-    }, [activePage]);
+            })
+    }, [activePage])
+
+    useEffect(() => {
+       getProducts();
+    }, [getProducts]);
 
     const handleCreate = () =>{
         history.push('/admin/products/create');
+    }
+
+    const onRemove = (productId: number) => {
+        const confirm = window.confirm('Deseja realmente excluir este produto?')
+        
+        if (confirm){
+            makePrivateRequest({ url: `/products/${productId}`, method: 'DELETE' })
+            .then(() => {
+                toast.info('Produto excluído com sucesso!');
+                getProducts();
+            })
+            .catch(() => {
+                toast.error('Erro ao excluir o produto!');
+        })
+        }
     }
 
     return (
@@ -38,7 +58,7 @@ const List = () => {
             </button>
             <div className="admin-list-container">
                 {productsResponse?.content.map(product => (
-                    <Card product={product} key={product.id}/>
+                    <Card product={product} key={product.id} onRemove={onRemove}/>
                 ))}
                 {productsResponse && (
                     <Pagination
